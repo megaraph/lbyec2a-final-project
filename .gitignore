@@ -1,2 +1,3 @@
 .vscode/*
+/src/pos
 .DS_Store
