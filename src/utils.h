@@ -7,6 +7,9 @@
 
 #include <stddef.h>
 
+#define ENCRYPT_SIZE 64
+#define DB_SIZE 3
+
 char *str_input(char *prompt, char *buffer, size_t size) {
   printf("%s", prompt);
   fgets(buffer, size, stdin);
@@ -17,12 +20,25 @@ char *str_input(char *prompt, char *buffer, size_t size) {
     buffer[len - 1] = '\0'; // Replace newline with null terminator
   }
 
-  // Check if the buffer is empty
-  if (buffer[0] == '\0') {
-    return ""; // Return an empty string if invalid
-  }
-
   return buffer; // Return the validbuffer
+}
+
+int find_account(const char *username,
+                 const char database[DB_SIZE][2][ENCRYPT_SIZE]) {
+  for (int row = 0; row < DB_SIZE; row++) {
+    if (strcmp(username, database[row][0]) == 0)
+      return row;
+  }
+  return -1;
+}
+
+int verify_pw(int user_index, const char *password,
+              const char database[DB_SIZE][2][ENCRYPT_SIZE]) {
+
+  if (strcmp(password, database[user_index][1]) == 0)
+    return 1;
+
+  return 0;
 }
 
 #endif // UTILS_H
