@@ -3,11 +3,19 @@
 #define UTILS_H
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <stddef.h>
 
-#include "utils.h"
+#include "config.h"
+
+#ifdef _WIN32
+#include <conio.h> // For getch() on Windows
+#else
+#include <termios.h> // For terminal control on UNIX/Linux
+#include <unistd.h>  // For read() on UNIX/Linux
+#endif
 
 char *str_input(char *prompt, char *buffer, size_t size) {
   printf("%s", prompt);
@@ -20,6 +28,63 @@ char *str_input(char *prompt, char *buffer, size_t size) {
   }
 
   return buffer; // Return the validbuffer
+}
+
+char *get_password(const char *prompt) {
+  char *password = malloc(ENCRYPT_SIZE);
+  if (password == NULL) {
+    fprintf(stderr, "Memory allocation failed\n");
+    return NULL;
+  }
+
+  int index = 0;
+  char ch;
+
+#ifdef _WIN32
+  printf("%s", prompt);
+  while (1) {
+    ch = _getch();    // Get a character without echoing
+    if (ch == '\r') { // Enter key
+      break;
+    } else if (ch == '\b') { // Backspace
+      if (index > 0) {
+        index--;
+        printf("\b \b"); // Move back, print space, move back again
+      }
+    } else if (index < ENCRYPT_SIZE - 1) {
+      password[index++] = ch;
+      printf("*"); // Mask the character
+    }
+  }
+#else
+  struct termios oldt, newt;
+  tcgetattr(STDIN_FILENO, &oldt);
+  newt = oldt;
+  newt.c_lflag &= ~(ECHO); // Disable echo
+  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+  printf("%s", prompt);
+  while (1) {
+    ch = getchar();
+    if (ch == '\n' || ch == '\r') { // Enter key
+      break;
+    } else if (ch == 127 || ch == '\b') { // Backspace
+      if (index > 0) {
+        index--;
+        printf("\b \b"); // Move back, print space, move back again
+      }
+    } else if (index < ENCRYPT_SIZE - 1) {
+      password[index++] = ch;
+      printf("*"); // Mask the character
+    }
+  }
+
+  tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // Restore old settings
+#endif
+
+  password[index] = '\0'; // Null-terminate the string
+  printf("\n");           // Move to the next line
+  return password;
 }
 
 int int_input_lower(char *prompt, char *error, int lower) {
