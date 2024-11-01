@@ -22,6 +22,72 @@ char *str_input(char *prompt, char *buffer, size_t size) {
   return buffer; // Return the validbuffer
 }
 
+int int_input_lower(char *prompt, char *error, int lower) {
+  int num_input = lower - 1;
+  do {
+    printf("%s", prompt);
+    int q_result = scanf("%d", &num_input);
+
+    // Check if input was not an integer or if it's <= 0
+    if (q_result != 1 || num_input < lower) {
+      printf("%s", error);
+
+      // Clear the input buffer if the input was invalid
+      while (getchar() != '\n')
+        ; // Discard the invalid input
+
+      // Reset `quantity` to an invalid value to keep the loop going
+      num_input = lower - 1;
+    }
+  } while (num_input < lower);
+
+  return num_input;
+}
+
+int int_input_upper(char *prompt, char *error, int upper) {
+  int num_input = upper + 1;
+  do {
+    printf("%s", prompt);
+    int q_result = scanf("%d", &num_input);
+
+    // Check if input was not an integer or if it's <= 0
+    if (q_result != 1 || num_input > upper) {
+      printf("%s", error);
+
+      // Clear the input buffer if the input was invalid
+      while (getchar() != '\n')
+        ; // Discard the invalid input
+
+      // Reset `quantity` to an invalid value to keep the loop going
+      num_input = upper + 1;
+    }
+  } while (num_input > upper);
+
+  return num_input;
+}
+
+int int_input_lower_upper(char *prompt, char *error, int lower, int upper) {
+  int num_input = lower - 1;
+  do {
+    printf("%s", prompt);
+    int q_result = scanf("%d", &num_input);
+
+    // Check if input was not an integer or if it's <= 0
+    if (q_result != 1 || num_input < lower || num_input > upper) {
+      printf("%s", error);
+
+      // Clear the input buffer if the input was invalid
+      while (getchar() != '\n')
+        ; // Discard the invalid input
+
+      // Reset `quantity` to an invalid value to keep the loop going
+      num_input = lower - 1;
+    }
+  } while (num_input < lower || num_input > upper);
+
+  return num_input;
+}
+
 int find_account(const char *username,
                  const char database[DB_SIZE][2][ENCRYPT_SIZE]) {
   for (int row = 0; row < DB_SIZE; row++) {
