@@ -29,12 +29,14 @@ int main() {
 
     if (option == 1) {
       continue;
-    } else if (option == 2) {
-      break;
-    } else {
-      printf("Exiting...\n");
-      return 1;
     }
+
+    if (option == 2) {
+      break;
+    }
+
+    printf("Exiting...\n");
+    return 1;
   }
 
   printf("\n");
