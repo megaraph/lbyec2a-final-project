@@ -55,7 +55,9 @@ int main() {
     while (item_index == -1) {
       printf("Enter order: ");
       scanf("%s", order_num);
+
       item_index = find_menu_item(order_num, MENU);
+
       if (item_index == -1)
         printf("Enter a valid menu item\n");
     }
@@ -64,6 +66,7 @@ int main() {
     do {
       printf("Quantity: ");
       scanf("%d", &quantity);
+
       if (quantity <= 0)
         printf("Enter valid quantity.\n");
     } while (quantity <= 0);
