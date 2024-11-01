@@ -7,8 +7,7 @@
 
 #include <stddef.h>
 
-#define ENCRYPT_SIZE 64
-#define DB_SIZE 3
+#include "utils.h"
 
 char *str_input(char *prompt, char *buffer, size_t size) {
   printf("%s", prompt);

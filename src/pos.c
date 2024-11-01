@@ -1,13 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "database.h"
+#include "menu.h"
 #include "utils.h"
-
-static const char DATABASE[DB_SIZE][2][ENCRYPT_SIZE] = {
-    {"raph", "123"},
-    {"abc", "324"},
-    {"hjk", "567"},
-};
 
 int login();
 
