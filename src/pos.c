@@ -9,19 +9,18 @@
 #define SENIOR_RATE 0.2
 #define OTHER_RATE 0.3
 
+void print_banner();
 int login();
 void display_menu();
 int get_option();
 int print_receipt(char *orders[ITEMS][4]);
 
 int main() {
+  // print brand banner
   printf("\n\n");
-  printf("**********************************************\n");
-  printf("*                                            *\n");
-  printf("*               Diddy's Burger               *\n");
-  printf("*                                            *\n");
-  printf("**********************************************\n\n");
+  print_banner();
 
+  printf("\n\n");
   printf("===========\n");
   printf("   LOGIN\n");
   printf("===========\n");
@@ -29,6 +28,7 @@ int main() {
   if (login() == 0)
     return -1;
 
+  printf("\n\n");
   while (1) {
     // display the menu when successfully logged in
     display_menu();
@@ -55,9 +55,9 @@ int main() {
     return 1;
   }
 
-  printf("\n");
-  printf("Take Order\n");
-  printf("\n");
+  printf("\n****************************************************\n");
+  printf("*                    TAKE ORDER                     *\n");
+  printf("****************************************************\n");
 
   // list of orders
   char *orders[ITEMS][4] = {{NULL}};
@@ -69,20 +69,24 @@ int main() {
     // take order via item number
     int item_index = -1;
     while (item_index == -1) {
-      printf("Enter order: ");
+      printf("| Enter order: ");
       scanf("%s", order_num);
 
       item_index = find_menu_item(order_num, MENU);
 
       if (item_index == -1)
-        printf("Enter a valid menu item\n");
+        printf("WARNING: Enter a valid menu item\n");
     }
 
+    printf("| ADDED: %s - %s to the order list\n", MENU[item_index][0],
+           MENU[item_index][1]);
+
     // take order quantity
-    quantity = int_input_lower("Quantity: ", "Enter a valid quantity.\n", 1);
+    quantity = int_input_lower(
+        "| Quantity: ", "WARNING: Enter a valid quantity.\n", 1);
 
     add_order(item_index, quantity, orders);
-    printf("TOTAL: %dPHP\n", get_orders_total(orders));
+    printf("| TOTAL: %dPHP\n", get_orders_total(orders));
 
     // prompt user whether to add more orders or not
     char add = '0';
@@ -91,11 +95,11 @@ int main() {
       while (getchar() != '\n')
         ; // Consume remaining characters in the buffer
 
-      printf("Additional Order? (Press y or n): ");
+      printf("| Additional Order? (Press y or n): ");
       add = getchar();
 
       if (add != 'y' && add != 'n')
-        printf("Enter valid input (y or n).\n");
+        printf("WARNING: Enter valid input (y or n).\n");
     }
 
     // order again
@@ -106,8 +110,10 @@ int main() {
     break;
   }
 
+  printf("\n");
   int receipt_choice = int_input_lower_upper(
-      "Press 1-Receipt, 2-Exit: ", "Enter valid choice (1 or 2).\n", 1, 2);
+      "| Press 1-Receipt, 2-Exit: ", "WARNING: Enter valid choice (1 or 2).\n",
+      1, 2);
 
   if (receipt_choice == 2) {
     printf("Exiting...\n");
@@ -117,8 +123,8 @@ int main() {
   float bill = (float)print_receipt(orders);
 
   int discount_choice = int_input_lower_upper(
-      "Discount? (0-None; 1-Senior 20percent, 2-Others 30percent): ",
-      "Enter valid choice.\n", 0, 2);
+      "| DISCOUNT? (0-None; 1-Senior 20%; 2-Others 30%): ",
+      "WARNING: Enter valid choice.\n", 0, 2);
 
   float senior_discount = 0;
   float other_discount = 0;
@@ -132,11 +138,12 @@ int main() {
 
   float cash = 0;
   while (cash < bill) {
-    printf("CASH: ");
+    printf("| CASH: ");
     int cash_result = scanf("%f", &cash);
 
     if (cash_result != 1) {
-      printf("Enter a valid amount. Only numeric input is alllowed.\n");
+      printf(
+          "WARNING: Enter a valid amount. Only numeric input is alllowed.\n");
 
       // Clear the input buffer if the input was invalid
       while (getchar() != '\n')
@@ -148,13 +155,28 @@ int main() {
     }
 
     if (cash < bill) {
-      printf("Invalid. Cash should exceed total price.\n");
+      printf("WARNING: Invalid. Cash should exceed total price.\n");
     }
   }
 
-  printf("CHANGE: %.2f\n", cash - bill);
+  printf("| CHANGE: %.2f\n", cash - bill);
 
   return 0;
+}
+
+void print_banner() {
+  printf("██████╗ ██╗███████╗███████╗██╗     ███████╗██████╗ ███████╗    "
+         "███████╗██╗███████╗███████╗██╗     ███████╗██████╗ ███████╗\n");
+  printf("██╔══██╗██║╚══███╔╝╚══███╔╝██║     ██╔════╝██╔══██╗██╔════╝    "
+         "██╔════╝██║╚══███╔╝╚══███╔╝██║     ██╔════╝██╔══██╗██╔════╝\n");
+  printf("██████╔╝██║  ███╔╝   ███╔╝ ██║     █████╗  ██████╔╝███████╗    "
+         "███████╗██║  ███╔╝   ███╔╝ ██║     █████╗  ██████╔╝███████╗\n");
+  printf("██╔══██╗██║ ███╔╝   ███╔╝  ██║     ██╔══╝  ██╔══██╗╚════██║    "
+         "╚════██║██║ ███╔╝   ███╔╝  ██║     ██╔══╝  ██╔══██╗╚════██║\n");
+  printf("██║  ██║██║███████╗███████╗███████╗███████╗██║  ██║███████║    "
+         "███████║██║███████╗███████╗███████╗███████╗██║  ██║███████║\n");
+  printf("╚═╝  ╚═╝╚═╝╚══════╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚══════╝    "
+         "╚══════╝╚═╝╚══════╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚══════╝\n");
 }
 
 int login() {
@@ -168,7 +190,7 @@ int login() {
 
   const char *password = get_password("PASSWORD: ");
   if (password[0] == '\0') {
-    printf("Invalid password.\n");
+    printf("WARNING: Invalid password.\n");
     return 0;
   }
 
@@ -176,12 +198,12 @@ int login() {
   int user_index = find_account(username, DATABASE);
 
   if (user_index == -1) {
-    printf("No account registered in system.\n");
+    printf("INFO: No account registered in system.\n");
     return 0;
   }
 
   if (!verify_pw(user_index, password, DATABASE)) {
-    printf("Invalid password.\n");
+    printf("WARNING: Invalid password.\n");
     return 0;
   }
 
@@ -189,28 +211,43 @@ int login() {
 }
 
 void display_menu() {
-  for (int item = 0; item < ITEMS; item++) {
-    printf("%s\t%s\t%s\n", MENU[item][0], MENU[item][1], MENU[item][2]);
+  printf("**********************************************\n");
+  printf("*          Rizzler's Sizzlers Menu           *\n");
+  printf("**********************************************\n");
+  printf("| %-5s | %-24s  | %-6s |\n", "Code", "Item", "Price");
+  printf("----------------------------------------------\n");
+
+  for (int i = 0; i < ITEMS; i++) {
+    printf("| %-5s | %-24s  | %6s |\n", MENU[i][0], MENU[i][1], MENU[i][2]);
   }
+
+  printf("**********************************************\n");
 }
 
 int get_option() {
   // display restaurant's options
-  printf("\nOPTIONS\n");
   printf("\n");
+  printf("****************************************************\n");
+  printf("*                    OPTIONS                       *\n");
+  printf("****************************************************\n");
+  printf("| 01 | Back to Menu                                |\n");
+  printf("| 02 | Take Order                                  |\n");
+  printf("| 03 | Exit                                        |\n");
+  printf("****************************************************\n");
 
-  printf("01 Back to Menu\n");
-  printf("02 Take Order\n");
-  printf("03 Exit \n");
-  printf("\n");
-
-  int option;
+  int option = -1;
   do {
     printf("Option: ");
-    scanf("%d", &option);
+    int res = scanf("%d", &option);
     // Clear the input buffer after reading the option
     while (getchar() != '\n')
       ; // Consume remaining characters in the buffer
+
+    if (res != 1 || option < 1 || option > 3) {
+      printf(
+          "WARNING: Input valid option (1, 2, or 3). Numeric values only.\n\n");
+      option = -1;
+    }
   } while (option < 1 || option > 3);
 
   return option;
@@ -218,17 +255,22 @@ int get_option() {
 
 int print_receipt(char *orders[ITEMS][4]) {
   int total = get_orders_total(orders);
-  printf("\nRECEIPT\n");
-  printf("Order\tQuantity\tPrice\n");
+
+  printf("\n************************************************************\n");
+  printf("*                        RECEIPT                           *\n");
+  printf("************************************************************\n");
+  printf("| Order Code  | Item                        | Qty | Price  |\n");
+  printf("------------------------------------------------------------\n");
 
   for (int item = 0; item < ITEMS; item++) {
     if (orders[item][0] == NULL)
       continue;
-    printf("%s %s\t%s\t%s\n", orders[item][0], orders[item][1], orders[item][3],
-           orders[item][2]);
+    printf("| %-10s  | %-27s | %-3s | %-6s |\n", orders[item][0],
+           orders[item][1], orders[item][3], orders[item][2]);
   }
 
-  printf("TOTAL\t\t%d\n", total);
+  printf("------------------------------------------------------------\n");
+  printf("| TOTAL:                                          %-8d |\n", total);
 
   return total;
 }
