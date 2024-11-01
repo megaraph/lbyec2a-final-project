@@ -88,27 +88,16 @@ int main() {
         printf("Enter valid input (y or n).\n");
     }
 
+    // order again
     if (add == 'y')
       continue;
 
+    // proceed to receipt or exit choice
     break;
   }
 
-  int receipt_choice = 0;
-  while (receipt_choice < 1 || receipt_choice > 2) {
-    printf("Press 1-Receipt, 2-Exit: ");
-    int r_result = scanf("%d", &receipt_choice);
-
-    if (r_result != 1 || receipt_choice < 1 || receipt_choice > 2) {
-      printf("Enter valid choice.\n");
-      // Clear the input buffer if the input was invalid
-      while (getchar() != '\n')
-        ; // Discard the invalid input
-
-      // Reset `quantity` to an invalid value to keep the loop going
-      receipt_choice = 0;
-    }
-  }
+  int receipt_choice = int_input_lower_upper(
+      "Press 1-Receipt, 2-Exit: ", "Enter valid choice (1 or 2).\n", 1, 2);
 
   if (receipt_choice == 2) {
     printf("Exiting...\n");
@@ -117,44 +106,45 @@ int main() {
 
   float bill = (float)print_receipt(orders);
 
-  int discount_choice = -1;
-  while (discount_choice < 0 || discount_choice > 2) {
-    printf("Discount? (0-None; 1-Senior 20percent, 2-Others 30percent): ");
-    int d_result = scanf("%d", &discount_choice);
-    if (d_result != 1 || discount_choice < 0 || discount_choice > 2) {
-      printf("Enter valid choice.\n");
+  int discount_choice = int_input_lower_upper(
+      "Discount? (0-None; 1-Senior 20percent, 2-Others 30percent): ",
+      "Enter valid choice.\n", 0, 2);
+
+  float senior_discount = 0;
+  float other_discount = 0;
+
+  if (discount_choice != 0) {
+    senior_discount = (discount_choice == 1) ? SENIOR_RATE * bill : 0;
+    other_discount = (discount_choice == 2) ? OTHER_RATE * bill : 0;
+  }
+
+  bill -= (senior_discount + other_discount);
+
+  float cash = 0;
+  while (cash < bill) {
+    printf("CASH: ");
+    int cash_result = scanf("%f", &cash);
+
+    if (cash_result != 1) {
+      printf("Enter a valid amount. Only numeric input is alllowed.\n");
+
       // Clear the input buffer if the input was invalid
       while (getchar() != '\n')
         ; // Discard the invalid input
 
       // Reset `quantity` to an invalid value to keep the loop going
-      discount_choice = 0;
+      cash = 0;
+      continue;
     }
 
-    float senior_discount = 0;
-    float other_discount = 0;
-
-    if (discount_choice != 0) {
-      senior_discount = (discount_choice == 1) ? SENIOR_RATE * bill : 0;
-      other_discount = (discount_choice == 2) ? OTHER_RATE * bill : 0;
+    if (cash < bill) {
+      printf("Invalid. Cash should exceed total price.\n");
     }
-
-    bill -= (senior_discount + other_discount);
-
-    float cash = 0;
-    while (cash < bill) {
-      printf("CASH: ");
-      scanf("%f", &cash);
-
-      if (cash < bill) {
-        printf("Invalid. Cash should exceed total price.\n");
-      }
-    }
-
-    printf("CHANGE: %.2f\n", cash - bill);
-
-    return 0;
   }
+
+  printf("CHANGE: %.2f\n", cash - bill);
+
+  return 0;
 }
 
 int login() {
