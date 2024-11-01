@@ -8,6 +8,7 @@
 
 int login();
 void display_menu();
+int get_option();
 
 int main() {
   // stop program for an invalid login
@@ -24,23 +25,7 @@ int main() {
     while (getchar() != '\n')
       ;
 
-    // display restaurant's options
-    printf("\nOPTIONS\n");
-    printf("\n");
-
-    printf("01 Back to Menu\n");
-    printf("02 Take Order\n");
-    printf("03 Exit \n");
-    printf("\n");
-
-    int option;
-    do {
-      printf("Option: ");
-      scanf("%d", &option);
-      // Clear the input buffer after reading the option
-      while (getchar() != '\n')
-        ; // Consume remaining characters in the buffer
-    } while (option < 1 || option > 3);
+    int option = get_option();
 
     if (option == 1) {
       continue;
@@ -56,7 +41,9 @@ int main() {
   printf("Take Order\n");
   printf("\n");
 
+  // list of orders
   char *orders[ITEMS][4] = {{NULL}};
+
   while (1) {
     char order_num[4];
     int quantity = 0;
@@ -140,4 +127,26 @@ void display_menu() {
   for (int item = 0; item < ITEMS; item++) {
     printf("%s\t%s\t%s\n", MENU[item][0], MENU[item][1], MENU[item][2]);
   }
+}
+
+int get_option() {
+  // display restaurant's options
+  printf("\nOPTIONS\n");
+  printf("\n");
+
+  printf("01 Back to Menu\n");
+  printf("02 Take Order\n");
+  printf("03 Exit \n");
+  printf("\n");
+
+  int option;
+  do {
+    printf("Option: ");
+    scanf("%d", &option);
+    // Clear the input buffer after reading the option
+    while (getchar() != '\n')
+      ; // Consume remaining characters in the buffer
+  } while (option < 1 || option > 3);
+
+  return option;
 }
