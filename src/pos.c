@@ -6,12 +6,21 @@
 #include "utils.h"
 
 int login();
+void display_menu();
 
 int main() {
+  // stop program for an invalid login
   if (login() == 0)
     return -1;
 
-  printf("Successful login.\n");
+  // display the menu when successfully logged in
+  display_menu();
+
+  // stop at menu while enter key is not pressed
+  printf("\n");
+  printf("Press enter to continue...");
+  while (getchar() != '\n')
+    ;
 
   return 0;
 }
@@ -45,4 +54,10 @@ int login() {
   }
 
   return 1;
+}
+
+void display_menu() {
+  for (int item = 0; item < ITEMS; item++) {
+    printf("%s\t%s\t%s\n", MENU[item][0], MENU[item][1], MENU[item][2]);
+  }
 }
