@@ -40,4 +40,47 @@ int verify_pw(int user_index, const char *password,
   return 0;
 }
 
+int find_menu_item(char *item_num, const char *menu[ITEMS][3]) {
+  for (int item = 0; item < ITEMS; item++) {
+    if (strcmp(item_num, menu[item][0]) == 0) {
+      return item;
+    }
+  }
+
+  return -1;
+}
+
+void add_order(int item_index, int quantity, char *orders[ITEMS][4]) {
+  char quant[32];
+
+  if (orders[item_index][0] != NULL) {
+    int current_quantity =
+        atoi(orders[item_index][3]); // Convert existing quantity to int
+
+    int new_quantity = current_quantity + quantity; // Add new quantity
+    sprintf(quant, "%d", new_quantity);
+    free(orders[item_index][3]); // Free the old quantity string
+
+    orders[item_index][3] = strdup(quant);
+    return;
+  }
+
+  sprintf(quant, "%d", quantity);
+  orders[item_index][0] = strdup(MENU[item_index][0]);
+  orders[item_index][1] = strdup(MENU[item_index][1]);
+  orders[item_index][2] = strdup(MENU[item_index][2]);
+  orders[item_index][3] = strdup(quant);
+}
+
+int get_orders_total(char *orders[ITEMS][4]) {
+  int total = 0;
+  for (int item = 0; item < ITEMS; item++) {
+    if (orders[item][2] == NULL)
+      continue;
+    total += atoi(orders[item][2]) * atoi(orders[item][3]);
+  }
+
+  return total;
+}
+
 #endif // UTILS_H
