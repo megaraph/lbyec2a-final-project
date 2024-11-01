@@ -15,6 +15,16 @@ int get_option();
 int print_receipt(char *orders[ITEMS][4]);
 
 int main() {
+  printf("\n\n");
+  printf("**********************************************\n");
+  printf("*                                            *\n");
+  printf("*               Diddy's Burger               *\n");
+  printf("*                                            *\n");
+  printf("**********************************************\n\n");
+
+  printf("===========\n");
+  printf("   LOGIN\n");
+  printf("===========\n");
   // stop program for an invalid login
   if (login() == 0)
     return -1;
@@ -156,7 +166,7 @@ int login() {
     return 0;
   }
 
-  const char *password = str_input("PASSWORD: ", pw_buffer, ENCRYPT_SIZE);
+  const char *password = get_password("PASSWORD: ");
   if (password[0] == '\0') {
     printf("Invalid password.\n");
     return 0;
