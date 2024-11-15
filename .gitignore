@@ -1,3 +1,5 @@
 .vscode/*
 /src/pos
 .DS_Store
+*.drawio
+*.bkp
