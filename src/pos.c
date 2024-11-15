@@ -184,7 +184,7 @@ int login() {
 
   const char *username = str_input("USERNAME: ", username_buffer, ENCRYPT_SIZE);
   if (username[0] == '\0') {
-    printf("Invalid username.\n");
+    printf("WARNING: Invalid username.\n");
     return 0;
   }
 
@@ -203,7 +203,7 @@ int login() {
   }
 
   if (!verify_pw(user_index, password, DATABASE)) {
-    printf("WARNING: Invalid password.\n");
+    printf("WARNING: Incorrect password.\n");
     return 0;
   }
 
