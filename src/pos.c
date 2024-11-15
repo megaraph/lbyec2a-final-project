@@ -193,9 +193,19 @@ int login() {
     return 0;
   }
 
+  if (strlen(username) > 20) {
+    printf("WARNING: Username should be less than 20 characters.\n");
+    return 0;
+  }
+
   const char *password = get_password("PASSWORD: ");
   if (password[0] == '\0') {
     printf("WARNING: Invalid password.\n");
+    return 0;
+  }
+
+  if (strlen(password) > 20) {
+    printf("WARNING: Password should be less than 20 characters.\n");
     return 0;
   }
 
