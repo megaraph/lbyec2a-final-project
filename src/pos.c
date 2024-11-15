@@ -62,6 +62,7 @@ int main() {
   // list of orders
   char *orders[ITEMS][4] = {{NULL}};
 
+  int order_count = 1;
   while (1) {
     char order_num[4];
     int quantity = 0;
@@ -69,6 +70,9 @@ int main() {
     // take order via item number
     int item_index = -1;
     while (item_index == -1) {
+      if (order_count > 1)
+        printf("\n");
+      printf("\n####### ITEM %d #######\n", order_count);
       printf("| Enter order: ");
       scanf("%s", order_num);
 
@@ -87,6 +91,7 @@ int main() {
 
     add_order(item_index, quantity, orders);
     printf("| TOTAL: %dPHP\n", get_orders_total(orders));
+    order_count++;
 
     // prompt user whether to add more orders or not
     char add = '0';
